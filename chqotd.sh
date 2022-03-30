@@ -3,17 +3,30 @@
 DEFAULTNUMBER=10
 QUOTES=""
 declare -a CHQA
+DESTINATION="/tmp/chqData"
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
 NEWLINE="\n"
 gQ=""
 
+isLetter()
+{
+    LETTER=$1
+    if [[ $LETTER == *[a-zA-Z]* ]]
+    then
+	return 0
+    fi
+    return 1
+}
+
 chqHelp()
 {
-    echo "FLAGS:
-       [-g Gets as many Chuck Norris quotes as given in number after the flag.]
-       [-c Short description of the usage of this script. Seriously! What did you expect?]
-       [-R Writes a random quote from array of quotes made by -g, otherwise gets a random quote from array of quotes, where the quantity is the value of DEFAULTNUMBER (value: "$DEFAULTNUMBER")]
-       [-C Counts characters in the quotes]
-       [-a About this script]"
+    echo -e "FLAGS:
+       [-g Gets as many Chuck Norris quotes as given in number after the flag.]\n
+       [-c Short description of the usage of this script. Seriously! What did you expect?]\n
+       [-R Writes a random quote from array of quotes made by -g into $DESTINATION,\n	otherwise gets a random quote from array of quotes, where the quantity is the value of DEFAULTNUMBER (value: "$DEFAULTNUMBER").]\n
+       [-r Reads the content of file $DESTINATION, if it exists.]\n
+       [-C Counts characters in the quotes.]\n
+       [-a About this script.]\n"
     exit
 }
 
@@ -35,6 +48,14 @@ chqAbout()
 getQuotes()
 {
     NUMBER=$1
+    isLetter $NUMBER
+
+    if [[ $? -eq 0 ]]
+    then
+	echo "Error: Incorrect option argument!"
+	exit
+    fi
+
 
     LINE=$(curl -s -H 'Accept: application/json' https://api.icndb.com/jokes/random/"$NUMBER" )
 
@@ -57,6 +78,7 @@ writeRandomQuote()
     declare -a TEMPA
     RND=""
     #echo "$TEMPNUM"
+    
     if [ -z $TEMPNUM ]
     then
 	TEMPNUM=$DEFAULTNUMBER
@@ -65,12 +87,16 @@ writeRandomQuote()
 	#echo "TN: $TEMPNUM"
 	RND=$(( $RANDOM % $TEMPNUM-1  + 1 ))
 	#echo "R: $((RND+1))"
-	echo -e "Random quote:\n${CHQA[$RND]}"
+	#echo -e "Random quote:\n${CHQA[$RND]}"
+	echo "Check the results for the random quote in $DESTINATION !"
+	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
     else
 	#echo "TN: $TEMPNUM"
 	RND=$(( $RANDOM % $TEMPNUM-1  + 1 ))
 	#echo "R: $((RND+1))"
-	echo -e "Random quote:\n${CHQA[$RND]}"
+	#echo -e "Random quote:\n${CHQA[$RND]}"
+	echo "Check the results for the random quote in $DESTINATION !"
+	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
 	#echo "${TEMPA[$RND]}"
     fi
     exit
@@ -79,9 +105,10 @@ writeRandomQuote()
 characterCount()
 {
     TEMPNUM=$1
+
     if [ -z $TEMPNUM ]
     then
-	echo "EROR: There are no characters to count!"
+	echo "ERROR: There are no characters to count!"
 	echo "Get some info:"
 	chqHelp
 	exit
@@ -100,7 +127,28 @@ characterCount()
     exit
 }
 
-while getopts "g:acRC" option; do
+readingFromDataFile()
+{
+    if [ -e $DESTINATION ]
+    then
+	#while read line
+	#do
+	#    echo $line
+	#done < $DESTINATION
+	#cat /tmp/chqData
+
+	cat $DESTINATION
+
+    else
+	echo "$DESTINATION file doesn't exist yet!"
+	echo "You should try to write into it with option -R, before selecting this option!"
+	exit
+    fi
+
+    exit
+}
+
+while getopts "g:acRCr" option; do
 
 case "$option" in
 
@@ -119,6 +167,10 @@ R)
     ;;
 C)
     characterCount "$gQ"
+    ;;
+
+r)
+    readingFromDataFile
     ;;
 
 *)
