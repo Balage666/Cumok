@@ -1,2 +1,2 @@
 # Cumok
-Cumók
+OS1_hazifeladat
