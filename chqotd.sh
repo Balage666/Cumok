@@ -3,7 +3,7 @@
 DEFAULTNUMBER=10
 QUOTES=""
 declare -a CHQA
-DESTINATION="/tmp/chqData"
+DESTINATION="$(xdg-user-dir DOCUMENTS)/.chqData"
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
 NEWLINE="\n"
 gQ=""
@@ -77,27 +77,40 @@ writeRandomQuote()
     TEMPNUM=$1
     declare -a TEMPA
     RND=""
+
     #echo "$TEMPNUM"
     
     if [ -z $TEMPNUM ]
     then
 	TEMPNUM=$DEFAULTNUMBER
+
 	#echo "getQuotes:"
+
 	getQuotes "$TEMPNUM"
+
 	#echo "TN: $TEMPNUM"
+
 	RND=$(( $RANDOM % $TEMPNUM-1  + 1 ))
+
 	#echo "R: $((RND+1))"
 	#echo -e "Random quote:\n${CHQA[$RND]}"
-	echo "Check the results for the random quote in $DESTINATION !"
+
+	echo "Check the results for random quote(s) in $DESTINATION !"
 	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
     else
+
 	#echo "TN: $TEMPNUM"
+
 	RND=$(( $RANDOM % $TEMPNUM-1  + 1 ))
+
 	#echo "R: $((RND+1))"
 	#echo -e "Random quote:\n${CHQA[$RND]}"
-	echo "Check the results for the random quote in $DESTINATION !"
+
+	echo "Check the results for random quote(s) in $DESTINATION !"
 	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
+
 	#echo "${TEMPA[$RND]}"
+
     fi
     exit
 }
@@ -113,7 +126,9 @@ characterCount()
 	chqHelp
 	exit
     else
+
 	#echo "L: ${#CHQA[@]}"
+
 	SUM=0
 	STR=""
 	for i in $(seq 0 ${#CHQA[@]})
@@ -131,11 +146,6 @@ readingFromDataFile()
 {
     if [ -e $DESTINATION ]
     then
-	#while read line
-	#do
-	#    echo $line
-	#done < $DESTINATION
-	#cat /tmp/chqData
 
 	cat $DESTINATION
 
