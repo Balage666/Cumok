@@ -121,14 +121,14 @@ characterCount()
 	exit
     else
 
-	SUM=0
+	COUNT=0
 	STR=""
 	for i in $(seq 0 ${#CHQA[@]})
 	do
 	CH=$(echo -n "${CHQA[$i]}" | wc -c)
-	SUM=$(($SUM+$CH))
+	COUNT=$(($COUNT+$CH))
 	done
-    echo "Characters Total: $SUM"
+    echo "Characters Total: $COUNT"
     fi
 
     exit
