@@ -127,7 +127,7 @@ characterCount()
 	CH=$(echo -n "${CHQA[$i]}" | wc -c)
 	CHARACTERSUM=$(($CHARACTERSUM+$CH))
 	done
-    echo "Characters Total: $CHARACTERSUM"
+	echo "Characters Total: $CHARACTERSUM"
     fi
 
     exit
