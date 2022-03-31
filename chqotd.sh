@@ -23,7 +23,7 @@ chqHelp()
     echo -e "FLAGS:
        [-g Gets as many Chuck Norris quotes as given in number after the flag.]\n
        [-c Short description of the usage of this script. Seriously! What did you expect?]\n
-       [-R Writes a random quote from array of quotes made by -g into $DESTINATION,\n	otherwise gets a random quote from array of quotes, where the quantity is the value of DEFAULTNUMBER (value: "$DEFAULTNUMBER").]\n
+       [-R Writes a random quote from array of quotes made by -g into $DESTINATION,\notherwise gets a random quote from array of quotes, where the quantity is the value of DEFAULTNUMBER (value: "$DEFAULTNUMBER").]\n
        [-r Reads the content of file $DESTINATION, if it exists.]\n
        [-C Counts characters in the quotes.]\n
        [-a About this script.]\n"
@@ -73,9 +73,7 @@ getQuotes()
 
 writeRandomQuote()
 {
-    #echo "writeRandomAmountOfQuotes:"
     TEMPNUM=$1
-    declare -a TEMPA
     RND=""
 
     #echo "$TEMPNUM"
@@ -83,8 +81,6 @@ writeRandomQuote()
     if [ -z $TEMPNUM ]
     then
 	TEMPNUM=$DEFAULTNUMBER
-
-	#echo "getQuotes:"
 
 	getQuotes "$TEMPNUM"
 
@@ -109,8 +105,6 @@ writeRandomQuote()
 	echo "Check the results for random quote(s) in $DESTINATION !"
 	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
 
-	#echo "${TEMPA[$RND]}"
-
     fi
     exit
 }
@@ -126,8 +120,6 @@ characterCount()
 	chqHelp
 	exit
     else
-
-	#echo "L: ${#CHQA[@]}"
 
 	SUM=0
 	STR=""
