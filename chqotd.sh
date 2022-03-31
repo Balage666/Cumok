@@ -11,6 +11,7 @@ gQ=""
 isLetter()
 {
     LETTER=$1
+
     if [[ $LETTER == *[a-zA-Z]* ]]
     then
 	return 0
@@ -56,15 +57,16 @@ getQuotes()
 	exit
     fi
 
-
     LINE=$(curl -s -H 'Accept: application/json' https://api.icndb.com/jokes/random/"$NUMBER" )
 
     for i in $(seq 0 $((NUMBER-1)))
     do
-    QUOTES=`jq -n "$LINE" | jq .value[$i].joke | cut -d \" -f2`
-    CHQA[$i]=$QUOTES
+	QUOTES=`jq -n "$LINE" | jq .value[$i].joke | cut -d \" -f2`
+	CHQA[$i]=$QUOTES
     done
+
     echo -e "Quote(s) of the day:\n"
+
     for i in $(seq 0 ${#CHQA[@]})
     do
 	echo "${CHQA[$i]}"
@@ -77,7 +79,7 @@ writeRandomQuote()
     RND=""
 
     #echo "$TEMPNUM"
-    
+
     if [ -z $TEMPNUM ]
     then
 	TEMPNUM=$DEFAULTNUMBER
@@ -94,7 +96,6 @@ writeRandomQuote()
 	echo "Check the results for random quote(s) in $DESTINATION !"
 	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
     else
-
 	#echo "TN: $TEMPNUM"
 
 	RND=$(( $RANDOM % $TEMPNUM-1  + 1 ))
@@ -104,7 +105,6 @@ writeRandomQuote()
 
 	echo "Check the results for random quote(s) in $DESTINATION !"
 	echo -e "Random quote written into this file at $DATE :\n${CHQA[$RND]}\n" >> $DESTINATION
-
     fi
     exit
 }
@@ -138,9 +138,7 @@ readingFromDataFile()
 {
     if [ -e $DESTINATION ]
     then
-
 	cat $DESTINATION
-
     else
 	echo "$DESTINATION file doesn't exist yet!"
 	echo "You should try to write into it with option -R, before selecting this option!"
